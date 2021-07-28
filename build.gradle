@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.5.3'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id 'com.craigburke.client-dependencies' version '1.3.1'
 }
 
 group = 'com.edo'
@@ -31,4 +32,34 @@ dependencies {
 
 test {
 	useJUnitPlatform()
+}
+
+clientDependencies {
+	installDir = '/src/main/resources/static/vendor'
+	npm {
+		'angular'('1.5.x', into: 'angular') {
+			include 'angular.js'
+			include 'angular.min.js'
+		}
+		'angular-resource'('1.5.x', into: 'angular') {
+			include 'angular-resource.js'
+			include 'angular-resource.min.js'
+		}
+		'angular-mocks'('1.5.x', into: 'angular') {
+			include 'angular-mocks.js'
+			include 'angular-mocks.min.js'
+		}
+		'angular-ui-router'('0.2.18', into: 'angular'){
+			include 'angular-ui-router.js'
+			include 'angular-ui-router.min.js'
+		}
+		'angular-animate'('1.5.x', into: 'angular') {
+			include 'angular-animate.js'
+			include 'angular-animate.min.js'
+		}
+		'angular-cookies'('1.5.x', into: 'angular') {
+			include 'angular-cookies.js'
+			include 'angular-cookies.min.js'
+		}
+	}
 }
