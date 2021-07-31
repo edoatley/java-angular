@@ -25,8 +25,6 @@ services:
     build:
       context: ../java-angular-client
       dockerfile: Dockerfile
-    #      args:
-    #        API_BASE_URL: http://127.0.0.1:8080/
     ports:
       - "4200:80" # Map the exposed port 80 on the container to port 4200 on the host machine
     restart: always
