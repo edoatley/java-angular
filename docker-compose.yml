@@ -1,0 +1,55 @@
+version: '3.7'
+
+services:
+  app-server:
+    # Configuration for building the docker image for the backend service
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080" # Forward the exposed port 8080 on the container to port 8080 on the host machine
+    restart: always
+    depends_on:
+      - db # This service depends on mysql. Start that first.
+    environment: # Pass environment variables to the service
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/user_db?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: mysqluser
+      SPRING_DATASOURCE_PASSWORD: topsecret
+      SPRING_JPA_DATABASE: mysql
+      SPRING_JPA_HIBERNATE_DDL-AUTO: create
+    networks: # Networks to join (Services on the same network can communicate with each other using their name)
+      - backend
+      - frontend
+
+  # Frontend Service
+  app-client:
+    build:
+      context: ../java-angular-client
+      dockerfile: Dockerfile
+    #      args:
+    #        API_BASE_URL: http://127.0.0.1:8080/
+    ports:
+      - "4200:80" # Map the exposed port 80 on the container to port 4200 on the host machine
+    restart: always
+    depends_on:
+      - app-server
+    networks:
+      - frontend
+
+  # Database Service (Mysql)
+  db:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    restart: always
+    environment:
+      MYSQL_DATABASE: user_db
+      MYSQL_USER: mysqluser
+      MYSQL_PASSWORD: topsecret
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - backend
+
+# Networks to be created to facilitate communication between containers
+networks:
+  backend:
+  frontend:
